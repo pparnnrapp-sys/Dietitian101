@@ -1,0 +1,258 @@
+# Pages CMS Configuration for Dietitian101
+# Docs: https://pagescms.org/docs/configuration
+media:
+  input: assets/images
+  output: /assets/images
+
+content:
+  # ==========================================
+  # 1. Disease Database (คลังความรู้รายโรค)
+  # ==========================================
+  - name: diseases
+    label: โรคและภาวะทางคลินิก (Disease Database)
+    type: collection
+    path: content/diseases
+    format: yaml-frontmatter
+    filename: "{fields.slug}.md"
+    view:
+      title: title
+      subtitle: category
+      primary: title
+    fields:
+      - name: title
+        label: ชื่อโรคภาษาอังกฤษ (Disease Name)
+        type: string
+        required: true
+        description: e.g. Chronic Kidney Disease, Type 2 Diabetes Mellitus
+
+      - name: title_th
+        label: ชื่อภาษาไทย (Thai Name)
+        type: string
+        required: true
+        description: e.g. โรคไตเรื้อรัง, โรคเบาหวานชนิดที่ 2
+
+      - name: abbreviation
+        label: ชื่อย่อ (Abbreviation)
+        type: string
+        description: e.g. CKD, T2DM, ESRD, HT, NAFLD, HF
+
+      - name: slug
+        label: URL Slug (รหัสไฟล์ / URL)
+        type: string
+        required: true
+        description: ภาษาอังกฤษตัวพิมพ์เล็กและขีดกลาง e.g. ckd, type-2-diabetes
+
+      - name: icd10
+        label: รหัส ICD-10
+        type: string
+        description: e.g. N18.9, E11.9, K74.6
+
+      - name: category
+        label: หมวดหมู่ / สาขาวิชา (Specialty Category)
+        type: select
+        required: true
+        options:
+          values:
+            - Renal & Nephrology (โรคไต)
+            - Endocrine & Diabetes (เบาหวานและต่อมไร้ท่อ)
+            - Cardiovascular (โรคหัวใจและหลอดเลือด)
+            - Critical Care & Nutrition Support (ผู้ป่วยวิกฤต/โภชนบำบัด)
+            - Gastrointestinal & Hepatic (ระบบทางเดินอาหารและตับ)
+            - Oncology (โรคมะเร็ง)
+            - Pediatrics & Growth (เด็กและการเจริญเติบโต)
+            - Weight Management & Surgery (การจัดการน้ำหนักและศัลยกรรม)
+
+      - name: badge_color
+        label: สีไอคอน Badge (Icon Color Tone)
+        type: select
+        options:
+          values:
+            - amber
+            - purple
+            - pink
+            - emerald
+            - cyan
+            - blue
+            - indigo
+            - teal
+            - rose
+
+      - name: icon
+        label: ไอคอนสัญลักษณ์ (Lucide Icon Name)
+        type: string
+        description: e.g. kidney, pill, activity, droplet, heart, flame, apple, shield
+
+      - name: tags
+        label: คำค้นหาเพิ่มเติม / ป้ายกำกับ (Search Keywords / Tags)
+        type: string
+        list: true
+        description: ใส่คำค้นหา เช่น eGFR, KDOQI, KDIGO, dialysis, โซเดียม, ฟอสฟอรัส
+
+      - name: summary
+        label: บทสรุปสั้นสำหรับการ์ดหน้าแรก (Card Summary)
+        type: text
+        options:
+          maxlength: 220
+        description: แสดงบนการ์ดในหน้ารวมบทความ ไม่เกิน 2-3 บรรทัด
+
+      - name: updated_at
+        label: อัปเดตล่าสุดเมื่อ (Last Updated)
+        type: date
+
+      # -------------------------------------------------------------
+      # 9 หัวข้อหลักสำหรับนักกำหนดอาหาร (The 9 Core Clinical Sections)
+      # -------------------------------------------------------------
+      - name: overview_pathophysiology
+        label: 1. Overview & Pathophysiology (ภาพรวมและพยาธิสรีรวิทยา)
+        type: rich-text
+        description: นิยาม ระบาดวิทยา กลไกการเกิดโรค และการดำเนินของโรค
+        options:
+          format: markdown
+
+      - name: nutrition_assessment
+        label: 2. Nutrition Assessment (การประเมินภาวะโภชนาการ ABCD)
+        type: rich-text
+        description: Anthropometric, Biochemical (แล็บสำคัญ), Clinical/Physical, Dietary Assessment
+        options:
+          format: markdown
+
+      - name: nutrition_diagnosis
+        label: 3. Nutrition Diagnosis (การวินิจฉัยทางโภชนาการ PES)
+        type: rich-text
+        description: ตัวอย่างประโยค PES Statement (Problem, Etiology, Signs/Symptoms) ที่พบบ่อย
+        options:
+          format: markdown
+
+      - name: nutrition_requirements
+        label: 4. Nutrition Requirements (ความต้องการสารอาหาร)
+        type: rich-text
+        description: ตารางคำนวณพลังงาน (Energy kcal/kg), โปรตีน (Protein g/kg), เกลือแร่ และของเหลว
+        options:
+          format: markdown
+
+      - name: medical_nutrition_therapy
+        label: 5. Medical Nutrition Therapy (โภชนบำบัดทางการแพทย์ MNT)
+        type: rich-text
+        description: วัตถุประสงค์และกลยุทธ์การให้ MNT การปรับสารอาหารในแต่ละระยะของโรค
+        options:
+          format: markdown
+
+      - name: food_dietary_management
+        label: 6. Food & Dietary Management (การจัดการอาหารและอาหารแลกเปลี่ยน)
+        type: rich-text
+        description: อาหารที่แนะนำ/ควรจำกัด อาหารแลกเปลี่ยน ตัวอย่างเมนูอาหารจริงในชีวิตประจำวัน
+        options:
+          format: markdown
+
+      - name: nutrition_monitoring_evaluation
+        label: 7. Nutrition Monitoring & Evaluation (การติดตามและประเมินผล)
+        type: rich-text
+        description: ดัชนีชี้วัดผลลัพธ์ (Outcome Indicators) และระยะเวลาการนัดตรวจติดตาม (Follow-up timeframe)
+        options:
+          format: markdown
+
+      - name: clinical_practice_guidelines
+        label: 8. Clinical Practice Guidelines (แนวทางเวชปฏิบัติที่เกี่ยวข้อง)
+        type: rich-text
+        description: สรุปคำแนะนำจากไกด์ไลน์ระดับสากลและระดับประเทศ (เช่น KDIGO, ADA, ASPEN, สมาคมฯ)
+        options:
+          format: markdown
+
+      - name: references_further_reading
+        label: 9. References & Further Reading (เอกสารอ้างอิงและแหล่งค้นคว้า)
+        type: rich-text
+        description: รายการเอกสารอ้างอิง ลิงก์ DOI และหนังสืออ่านเพิ่มเติม
+        options:
+          format: markdown
+
+  # ==========================================
+  # 2. Clinical Guidelines Center (ศูนย์รวมไกด์ไลน์)
+  # ==========================================
+  - name: guidelines
+    label: ศูนย์รวมไกด์ไลน์ (Clinical Practice Guidelines)
+    type: collection
+    path: content/guidelines
+    format: yaml-frontmatter
+    filename: "{fields.slug}.md"
+    view:
+      title: title
+      subtitle: organization
+      primary: title
+    fields:
+      - name: title
+        label: ชื่อแนวทางเวชปฏิบัติ (Guideline Title)
+        type: string
+        required: true
+        description: e.g. KDIGO 2024 Clinical Practice Guideline for the Management of CKD
+
+      - name: organization
+        label: สมาคม / องค์กรผู้ออกไกด์ไลน์ (Organization)
+        type: select
+        required: true
+        options:
+          values:
+            - KDIGO (Kidney Disease: Improving Global Outcomes)
+            - ADA (American Diabetes Association)
+            - ASPEN (American Society for Parenteral and Enteral Nutrition)
+            - ESPEN (European Society for Clinical Nutrition and Metabolism)
+            - TDA (สมาคมนักกำหนดอาหารแห่งประเทศไทย)
+            - THAI-KIDNEY (สมาคมโรคไตแห่งประเทศไทย)
+            - ESC / AHA (Cardiology Societies)
+            - ESPGHAN (Pediatric GI & Nutrition)
+            - OTHER (อื่นๆ)
+
+      - name: year
+        label: ปีที่ประกาศใช้ (Year Published)
+        type: number
+        required: true
+        description: e.g. 2024, 2023, 2020
+
+      - name: slug
+        label: URL Slug
+        type: string
+        required: true
+        description: e.g. kdigo-2024-ckd, ada-2024-standards
+
+      - name: category
+        label: สาขา / หมวดหมู่โรค
+        type: select
+        required: true
+        options:
+          values:
+            - Renal & Nephrology
+            - Endocrine & Diabetes
+            - Cardiovascular
+            - Critical Care & Nutrition Support
+            - Gastrointestinal & Hepatic
+            - Oncology
+            - Pediatrics & Neonatal
+            - General Nutrition & Malnutrition
+
+      - name: disease_ref
+        label: โรคที่เกี่ยวข้อง (Related Disease Slug)
+        type: string
+        description: e.g. ckd, type-2-diabetes, malnutrition-refeeding
+
+      - name: evidence_level
+        label: ระดับหลักฐานเชิงประจักษ์ (Evidence Grade)
+        type: string
+        description: e.g. Level 1A, Grade A/B, Strong Recommendation
+
+      - name: summary
+        label: บทสรุปสาระสำคัญ (Executive Summary)
+        type: text
+        description: สรุปความสำคัญและการนำไปใช้ทางคลินิกสั้นๆ 3-5 บรรทัด
+
+      - name: key_recommendations
+        label: ข้อแนะนำหลักสำหรับนักกำหนดอาหาร (Key Clinical Recommendations)
+        type: rich-text
+        options:
+          format: markdown
+
+      - name: original_url
+        label: ลิงก์เอกสารต้นฉบับ (Official Journal URL / DOI)
+        type: string
+
+      - name: pdf_file
+        label: ไฟล์ PDF ดาวน์โหลด (PDF Attachment)
+        type: file

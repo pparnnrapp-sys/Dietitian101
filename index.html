@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clinical Reference Library | Dietitian101 คลังความรู้นักกำหนดอาหาร</title>
+  
+  <!-- Google Fonts: Inter & Prompt for clean medical typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Reading Progress Bar -->
+  <div id="readingProgressBar"></div>
+
+  <!-- Sticky Site Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div style="display: flex; align-items: center; gap: 2rem;">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <span>Dietitian101</span>
+          <span class="brand-tag">Clinical Hub</span>
+        </a>
+
+        <nav>
+          <ul class="nav-links">
+            <li><a href="index.html" class="nav-link active">คลังความรู้รายโรค</a></li>
+            <li><a href="guidelines.html" class="nav-link">ศูนย์รวม Guideline</a></li>
+            <li><a href="library.html" class="nav-link">My Library</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="header-actions">
+        <!-- Dark Mode Toggle -->
+        <button class="icon-btn theme-toggle-btn" onclick="ThemeManager.toggle()" title="สลับโหมดมืด/สว่าง">
+          <!-- Icon injected by JS -->
+        </button>
+
+        <!-- Feedback Button -->
+        <button class="btn btn-secondary" onclick="openModal('feedbackModal')" title="เสนอแนะเนื้อหา">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>เสนอแนะเนื้อหา</span>
+        </button>
+
+        <!-- My Library Quick Link -->
+        <a href="library.html" class="btn btn-primary" title="ดูบทความที่บันทึกไว้">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+          <span>My Library</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container">
+    <!-- Hero Section (Matches uploaded Reference Image) -->
+    <section class="hero-section">
+      <h1 class="hero-title">Clinical Reference Library</h1>
+      <p class="hero-subtitle">คลังความรู้โภชนบำบัดทางการแพทย์ แนวทางเวชปฏิบัติสากล และการดูแลผู้ป่วยเฉพาะโรคสำหรับนักกำหนดอาหาร</p>
+
+      <!-- Smart Search with Auto Suggestion -->
+      <div class="search-wrapper">
+        <div class="search-input-group">
+          <span class="search-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </span>
+          <input 
+            type="text" 
+            id="homeSearchInput" 
+            class="search-input" 
+            placeholder="ค้นหาด้วยชื่อโรค, ชื่อย่อ (CKD, DM, RFS, TPN) หรือ Keyword..."
+            autocomplete="off"
+          >
+          <span class="search-shortcut">Ctrl + K</span>
+        </div>
+
+        <!-- Auto Suggestion Dropdown -->
+        <div id="homeSuggestBox" class="auto-suggest-box"></div>
+      </div>
+
+      <!-- Personalized Favorite Topics Alert (If configured in My Library) -->
+      <div id="favoriteTopicsBanner" style="display: none; margin-bottom: 1.5rem; padding: 0.75rem 1.25rem; background-color: var(--primary-light); border-radius: var(--radius-md); font-size: 0.875rem; color: var(--primary); align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span>แสดงหมวดหมู่ที่คุณสนใจเป็นพิเศษ: <strong id="favTopicsList"></strong></span>
+        </div>
+        <a href="library.html#favorites" style="text-decoration: underline; font-weight: 600;">ปรับแต่ง</a>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="filter-bar" id="categoryFilterBar">
+        <button class="filter-pill active" data-category="all">
+          <span>ทั้งหมด (All Topics)</span>
+        </button>
+        <button class="filter-pill" data-category="renal">
+          <span>โรคไต (Renal)</span>
+        </button>
+        <button class="filter-pill" data-category="endocrine">
+          <span>เบาหวานและต่อมไร้ท่อ (DM)</span>
+        </button>
+        <button class="filter-pill" data-category="critical">
+          <span>โภชนบำบัดวิกฤต (Critical & EN/PN)</span>
+        </button>
+        <button class="filter-pill" data-category="gi">
+          <span>ทางเดินอาหารและตับ (GI & Liver)</span>
+        </button>
+        <button class="filter-pill" data-category="cardio">
+          <span>หัวใจและหลอดเลือด (Cardio)</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Recently Viewed Row (if any) -->
+    <section id="recentlyViewedSection" style="display: none; margin-bottom: 2.5rem;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+        <h3 style="font-size: 1.15rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          เอกสารที่เปิดดูล่าสุด (Recently Viewed)
+        </h3>
+        <a href="library.html#history" style="font-size: 0.85rem; color: var(--primary); font-weight: 500;">ดูประวัติทั้งหมด &rarr;</a>
+      </div>
+      <div id="recentlyViewedContainer" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem;">
+        <!-- Injected by JS -->
+      </div>
+    </section>
+
+    <!-- Clinical Grid of Cards (Matching the user's reference image) -->
+    <section>
+      <div id="clinicalCardsContainer" class="clinical-grid">
+        <!-- Injected dynamically by JS from DIETITIAN_DATA -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Floating Action Buttons -->
+  <div class="floating-actions">
+    <!-- Back To Top Button -->
+    <button id="backToTopBtn" class="fab-btn" title="กลับขึ้นด้านบน" style="opacity: 0; pointer-events: none;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+    </button>
+    
+    <!-- Report Issue FAB -->
+    <button class="fab-btn" onclick="openModal('reportModal')" title="แจ้งปัญหาการใช้งาน">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </button>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">เสนอแนะเนื้อหาหรือข้อคิดเห็น</h3>
+        <button class="icon-btn" onclick="closeModal('feedbackModal')">&times;</button>
+      </div>
+      <form onsubmit="handleFeedbackSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">ชื่อ / ตำแหน่ง (เช่น นักกำหนดอาหาร รพ.ศูนย์)</label>
+          <input type="text" class="form-control" placeholder="ระบุชื่อหรือตำแหน่งของคุณ (ไม่บังคับ)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">หัวข้อ / โรคที่ต้องการเสนอแนะ *</label>
+          <input type="text" class="form-control" placeholder="เช่น การคำนวณโปรตีนในผู้ป่วยไตระยะ 4" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">รายละเอียดข้อเสนอแนะ *</label>
+          <textarea class="form-control" placeholder="พิมพ์ข้อเสนอแนะ การปรับปรุงข้อมูล หรือแหล่งอ้างอิงใหม่ที่ต้องการให้เพิ่มเติม..." required></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('feedbackModal')">ยกเลิก</button>
+          <button type="submit" class="btn btn-primary">ส่งข้อเสนอแนะ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Report Issue Modal -->
+  <div id="reportModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">แจ้งปัญหาการใช้งาน (Report Issue)</h3>
+        <button class="icon-btn" onclick="closeModal('reportModal')">&times;</button>
+      </div>
+      <form onsubmit="handleReportSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">ประเภทปัญหา *</label>
+          <select class="form-control" required>
+            <option value="">-- เลือกประเภทปัญหา --</option>
+            <option value="content_error">เนื้อหาข้อมูลทางคลินิกคลาดเคลื่อน</option>
+            <option value="broken_link">ลิงก์เสีย / ไฟล์เปิดไม่ได้</option>
+            <option value="ui_bug">หน้าเว็บแสดงผลผิดปกติ</option>
+            <option value="other">ปัญหาอื่นๆ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">หน้าที่พบปัญหา</label>
+          <input type="text" class="form-control" value="หน้าแรก (Clinical Reference Library)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">รายละเอียดปัญหา *</label>
+          <textarea class="form-control" placeholder="อธิบายปัญหาที่พบเพื่อความรวดเร็วในการแก้ไข..." required></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('reportModal')">ยกเลิก</button>
+          <button type="submit" class="btn btn-primary">ส่งรายงาน</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--text-primary);">
+        <span>Dietitian101</span>
+        <span>•</span>
+        <span>Clinical Reference Library</span>
+      </div>
+      <p>ออกแบบและพัฒนาสำหรับนักกำหนดอาหารและบุคลากรทางการแพทย์ • ขับเคลื่อนด้วย Pages CMS & Markdown</p>
+      <div style="display: flex; gap: 1.5rem; margin-top: 0.5rem;">
+        <a href="guidelines.html" style="color: var(--primary);">ศูนย์รวม Guideline</a>
+        <a href="library.html" style="color: var(--primary);">My Library</a>
+        <a href="javascript:void(0)" onclick="openModal('reportModal')" style="color: var(--primary);">แจ้งปัญหาการใช้งาน</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    // Homepage Controller
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCards('all');
+      setupCategoryFilter();
+      renderRecentlyViewed();
+      checkFavoriteTopicsBanner();
+    });
+
+    function getIconSvg(iconName, colorClass) {
+      // Maps to matching medical lucide-style SVG icons
+      const icons = {
+        'droplets': `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 16.3c2.2 0 4-1.83 4-4.05 0-1.16-.57-2.26-1.71-3.19S7.29 6.75 7 5.3c-.29 1.45-1.14 2.84-2.29 3.76S3 11.1 3 12.25c0 2.22 1.8 4.05 4 4.05z"/><path d="M12.56 6.6A10.97 10.97 0 0 0 14 3.02c.5 2.5 2 4.9 4 6.5s3 3.5 3 5.5a6.98 6.98 0 0 1-11.91 4.97"/></svg>`,
+        'activity': `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
+        'heart-pulse': `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h4.27"/></svg>`,
+        'container': `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10"/><path d="M9 2v4"/><path d="M15 2v4"/><rect width="16" height="14" x="4" y="6" rx="2"/><path d="M4 11h16"/><path d="M9 16h6"/></svg>`,
+        'shield': `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>`,
+        'heart': `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`
+      };
+      return icons[iconName] || icons['activity'];
+    }
+
+    function renderCards(category) {
+      const container = document.getElementById('clinicalCardsContainer');
+      if (!container || !window.DIETITIAN_DATA) return;
+
+      let diseases = window.DIETITIAN_DATA.diseases;
+      if (category && category !== 'all') {
+        diseases = diseases.filter(d => d.category === category);
+      }
+
+      container.innerHTML = diseases.map(d => {
+        const isBookmarked = LibraryManager.isBookmarked(d.id);
+        const badgeClass = `badge-${d.badge_color || 'purple'}`;
+        const iconSvg = getIconSvg(d.icon, badgeClass);
+
+        return `
+          <div class="clinical-card" onclick="window.location.href='disease.html?slug=${d.slug}'">
+            <div class="card-header-row">
+              <div class="icon-badge ${badgeClass}">
+                ${iconSvg}
+              </div>
+              <div class="card-actions">
+                <button 
+                  class="bookmark-btn ${isBookmarked ? 'active' : ''}" 
+                  data-id="${d.id}"
+                  onclick="handleCardBookmark(event, '${d.id}')"
+                  title="${isBookmarked ? 'บันทึกแล้ว' : 'บันทึกบทความ'}"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="${isBookmarked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                    <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <h3 class="card-title">${d.title}</h3>
+            <div class="card-title-th">${d.title_th}</div>
+            
+            <p class="card-summary">${d.summary}</p>
+
+            <div class="card-footer">
+              <div class="card-link">
+                <span>View Guide</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </div>
+              <span class="card-meta-pill">${d.abbreviation || d.icd10 || d.read_time}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setupCategoryFilter() {
+      const pills = document.querySelectorAll('#categoryFilterBar .filter-pill');
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          pills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          const cat = pill.getAttribute('data-category');
+          renderCards(cat);
+        });
+      });
+    }
+
+    function handleCardBookmark(e, diseaseId) {
+      e.stopPropagation();
+      e.preventDefault();
+      const disease = window.DIETITIAN_DATA.diseases.find(d => d.id === diseaseId);
+      if (disease) {
+        LibraryManager.toggleBookmark(disease);
+      }
+    }
+
+    function renderRecentlyViewed() {
+      const section = document.getElementById('recentlyViewedSection');
+      const container = document.getElementById('recentlyViewedContainer');
+      if (!section || !container) return;
+
+      const recent = LibraryManager.getRecentlyViewed();
+      if (recent.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+
+      container.innerHTML = recent.map(item => `
+        <a href="disease.html?slug=${item.slug}" style="display: block; padding: 0.85rem 1rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); transition: border-color 0.15s;">
+          <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.2rem;">${item.title}</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">${item.title_th || 'เปิดอ่านล่าสุด'}</div>
+        </a>
+      `).join('');
+
+      section.style.display = 'block';
+    }
+
+    function checkFavoriteTopicsBanner() {
+      const banner = document.getElementById('favoriteTopicsBanner');
+      const listSpan = document.getElementById('favTopicsList');
+      if (!banner || !listSpan) return;
+
+      const favs = LibraryManager.getFavoriteTopics();
+      if (favs && favs.length > 0) {
+        listSpan.textContent = favs.join(', ');
+        banner.style.display = 'flex';
+      }
+    }
+  </script>
+</body>
+</html>

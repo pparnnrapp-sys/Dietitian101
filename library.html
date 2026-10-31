@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Library | Dietitian101 คลังส่วนตัวและประวัติการอ่าน</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .tab-nav {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 2rem;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 0.85rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .tab-pane {
+      display: none;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+    .topic-chip {
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      background-color: var(--bg-surface);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: all 0.15s;
+    }
+    .topic-chip:hover {
+      border-color: var(--primary);
+    }
+    .topic-chip.selected {
+      background-color: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div style="display: flex; align-items: center; gap: 2rem;">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <span>Dietitian101</span>
+        </a>
+
+        <nav>
+          <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">คลังความรู้รายโรค</a></li>
+            <li><a href="guidelines.html" class="nav-link">ศูนย์รวม Guideline</a></li>
+            <li><a href="library.html" class="nav-link active">My Library</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle-btn" onclick="ThemeManager.toggle()" title="สลับโหมดมืด/สว่าง"></button>
+        <button class="btn btn-secondary" onclick="openModal('feedbackModal')">เสนอแนะ</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+    <div style="margin-bottom: 2rem;">
+      <h1 class="hero-title" style="margin-bottom: 0.4rem;">My Library</h1>
+      <p class="hero-subtitle" style="margin-bottom: 1.5rem;">ศูนย์รวมบทความและแนวทางเวชปฏิบัติที่คุณบันทึกไว้ ประวัติการเข้าชม และสาขาที่คุณสนใจ</p>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('bookmarks', this)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+        <span>บทความที่บันทึกไว้ (Bookmarks)</span>
+        <span id="bookmarkCountBadge" style="font-size: 0.75rem; padding: 0.1rem 0.5rem; background: var(--bg-subtle); border-radius: 9999px;">0</span>
+      </button>
+
+      <button class="tab-btn" onclick="switchTab('history', this)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>ประวัติการอ่าน (Reading History)</span>
+      </button>
+
+      <button class="tab-btn" onclick="switchTab('recent', this)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+        <span>เปิดดูล่าสุด (Recently Viewed)</span>
+      </button>
+
+      <button class="tab-btn" onclick="switchTab('favorites', this)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>สาขาที่สนใจ (My Favorite Topics)</span>
+      </button>
+    </div>
+
+    <!-- Tab 1: Bookmarks -->
+    <div id="pane-bookmarks" class="tab-pane active">
+      <div id="bookmarksList" class="clinical-grid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- Tab 2: Reading History -->
+    <div id="pane-history" class="tab-pane">
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+        <button class="btn btn-secondary" onclick="handleClearHistory()" style="font-size: 0.85rem; color: var(--accent-rose);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+          <span>ล้างประวัติการอ่าน</span>
+        </button>
+      </div>
+      <div id="historyList" style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- Tab 3: Recently Viewed -->
+    <div id="pane-recent" class="tab-pane">
+      <div id="recentList" class="clinical-grid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- Tab 4: My Favorite Topics -->
+    <div id="pane-favorites" class="tab-pane">
+      <div class="clinical-section" style="max-width: 760px;">
+        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;">เลือกสาขาหรือโรคที่คุณให้ความสนใจ</h3>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">ระบบจะนำหมวดหมู่ที่คุณเลือกไปเน้นแสดงบนหน้าแรก (Clinical Reference Library) เพื่อความสะดวกรวดเร็วในการค้นคว้า</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 2rem;" id="topicsSelectionGrid">
+          <!-- Checkbox chips injected by JS -->
+        </div>
+
+        <button class="btn btn-primary" onclick="saveFavoriteTopics()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          <span>บันทึกการตั้งค่าสาขาที่สนใจ</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Dietitian101 • My Library</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check hash in URL (e.g. #history or #favorites)
+      const hash = window.location.hash.replace('#', '');
+      if (['bookmarks', 'history', 'recent', 'favorites'].includes(hash)) {
+        const targetBtn = document.querySelector(`button[onclick*="'${hash}'"]`);
+        if (targetBtn) switchTab(hash, targetBtn);
+      }
+
+      loadBookmarks();
+      loadHistory();
+      loadRecentlyViewed();
+      loadFavoriteTopicsConfig();
+    });
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      
+      btn.classList.add('active');
+      const pane = document.getElementById(`pane-${tabId}`);
+      if (pane) pane.classList.add('active');
+      window.location.hash = tabId;
+    }
+
+    function loadBookmarks() {
+      const container = document.getElementById('bookmarksList');
+      const badge = document.getElementById('bookmarkCountBadge');
+      const bookmarks = LibraryManager.getBookmarks();
+
+      if (badge) badge.textContent = bookmarks.length;
+      if (!container) return;
+
+      if (bookmarks.length === 0) {
+        container.innerHTML = `
+          <div class="clinical-section" style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--text-muted); margin-bottom: 1rem;"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+            <h3 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem;">ยังไม่มีบทความที่บันทึกไว้</h3>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">คลิกที่ไอคอนริบบิ้น/ดาวบนบทความหรือ Guideline ที่คุณสนใจเพื่อบันทึกไว้อ่านภายหลัง</p>
+            <a href="index.html" class="btn btn-primary">สำรวจคลังความรู้</a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = bookmarks.map(b => {
+        const isDisease = b.type !== 'guideline';
+        const url = isDisease ? `disease.html?slug=${b.slug}` : `guidelines.html#${b.slug}`;
+
+        return `
+          <div class="clinical-card" onclick="window.location.href='${url}'">
+            <div class="card-header-row">
+              <span class="badge-tag">${isDisease ? 'โรค/ภาวะ' : 'Guideline'}</span>
+              <button class="bookmark-btn active" onclick="removeBookmarkFromLibrary(event, '${b.id}')" title="ลบออกจาก My Library">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+              </button>
+            </div>
+            <h3 class="card-title">${b.title}</h3>
+            <div class="card-title-th">${b.title_th}</div>
+            <div class="card-footer">
+              <div class="card-link">เปิดอ่าน &rarr;</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function removeBookmarkFromLibrary(e, id) {
+      if (e) e.stopPropagation();
+      LibraryManager.toggleBookmark({ id });
+      loadBookmarks();
+    }
+
+    function loadHistory() {
+      const container = document.getElementById('historyList');
+      if (!container) return;
+      const history = LibraryManager.getHistory();
+
+      if (history.length === 0) {
+        container.innerHTML = `
+          <div class="clinical-section" style="text-align: center; padding: 3rem;">
+            <p style="color: var(--text-muted);">ยังไม่มีประวัติการอ่าน</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = history.map(item => {
+        const dateStr = item.visited_at ? new Date(item.visited_at).toLocaleString('th-TH') : '';
+        return `
+          <a href="disease.html?slug=${item.slug}" style="display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.5rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); transition: all 0.15s;">
+            <div>
+              <div style="font-weight: 600; font-size: 1rem; color: var(--text-primary); margin-bottom: 0.2rem;">${item.title}</div>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">${item.title_th || ''}</div>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); text-align: right;">${dateStr}</div>
+          </a>
+        `;
+      }).join('');
+    }
+
+    function handleClearHistory() {
+      if (confirm('คุณต้องการล้างประวัติการอ่านทั้งหมดหรือไม่?')) {
+        LibraryManager.clearHistory();
+        loadHistory();
+      }
+    }
+
+    function loadRecentlyViewed() {
+      const container = document.getElementById('recentList');
+      if (!container) return;
+      const recent = LibraryManager.getRecentlyViewed();
+
+      if (recent.length === 0) {
+        container.innerHTML = `
+          <div class="clinical-section" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+            <p style="color: var(--text-muted);">ยังไม่มีรายการเปิดดูล่าสุด</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = recent.map(item => `
+        <div class="clinical-card" onclick="window.location.href='disease.html?slug=${item.slug}'">
+          <h3 class="card-title">${item.title}</h3>
+          <div class="card-title-th">${item.title_th}</div>
+          <div class="card-footer">
+            <div class="card-link">เปิดอ่านอีกครั้ง &rarr;</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    const AVAILABLE_TOPICS = [
+      'Renal & Nephrology (โรคไต)',
+      'Endocrine & Diabetes (เบาหวานและต่อมไร้ท่อ)',
+      'Critical Care & Nutrition Support (ผู้ป่วยวิกฤต/อาหารทางสาย)',
+      'Gastrointestinal & Hepatic (ทางเดินอาหารและตับ)',
+      'Cardiovascular (โรคหัวใจและหลอดเลือด)',
+      'Oncology (โรคมะเร็ง)',
+      'Pediatrics & Neonatal (โภชนาการเด็ก)',
+      'Special Diets & Dysphagia (อาหารดัดแปลงเนื้อสัมผัส)'
+    ];
+
+    function loadFavoriteTopicsConfig() {
+      const container = document.getElementById('topicsSelectionGrid');
+      if (!container) return;
+      const savedFavs = LibraryManager.getFavoriteTopics();
+
+      container.innerHTML = AVAILABLE_TOPICS.map(topic => {
+        const isSelected = savedFavs.includes(topic);
+        return `
+          <div class="topic-chip ${isSelected ? 'selected' : ''}" onclick="toggleTopicChip(this, '${topic}')">
+            <input type="checkbox" ${isSelected ? 'checked' : ''} style="pointer-events: none;">
+            <span style="font-size: 0.9rem;">${topic}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleTopicChip(element, topic) {
+      element.classList.toggle('selected');
+      const checkbox = element.querySelector('input');
+      checkbox.checked = !checkbox.checked;
+    }
+
+    function saveFavoriteTopics() {
+      const selected = [];
+      document.querySelectorAll('.topic-chip.selected span').forEach(s => {
+        selected.push(s.textContent.trim());
+      });
+      LibraryManager.setFavoriteTopics(selected);
+    }
+  </script>
+</body>
+</html>

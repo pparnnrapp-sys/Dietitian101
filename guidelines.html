@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clinical Guidelines Center | Dietitian101 ศูนย์รวมแนวทางเวชปฏิบัติ</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div style="display: flex; align-items: center; gap: 2rem;">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <span>Dietitian101</span>
+        </a>
+
+        <nav>
+          <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">คลังความรู้รายโรค</a></li>
+            <li><a href="guidelines.html" class="nav-link active">ศูนย์รวม Guideline</a></li>
+            <li><a href="library.html" class="nav-link">My Library</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="header-actions">
+        <button class="icon-btn theme-toggle-btn" onclick="ThemeManager.toggle()" title="สลับโหมดมืด/สว่าง"></button>
+        <button class="btn btn-secondary" onclick="openModal('feedbackModal')">เสนอแนะ</button>
+        <a href="library.html" class="btn btn-primary">My Library</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container" style="padding-top: 3rem; padding-bottom: 5rem;">
+    <!-- Title Section -->
+    <div style="margin-bottom: 2.5rem;">
+      <h1 class="hero-title" style="margin-bottom: 0.5rem;">Clinical Practice Guidelines</h1>
+      <p class="hero-subtitle" style="margin-bottom: 1.5rem;">ศูนย์รวมแนวทางเวชปฏิบัติและหลักฐานเชิงประจักษ์ด้านโภชนบำบัดทางการแพทย์จากสมาคมชั้นนำระดับโลกและในประเทศ</p>
+
+      <!-- Search & Filters -->
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between;">
+        <div class="search-wrapper" style="max-width: 420px; margin-bottom: 0;">
+          <div class="search-input-group">
+            <span class="search-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </span>
+            <input 
+              type="text" 
+              id="guidelineSearchInput" 
+              class="search-input" 
+              style="height: 44px;"
+              placeholder="ค้นหาไกด์ไลน์ (เช่น KDIGO, ADA, ASPEN, ไต, เบาหวาน)..."
+            >
+          </div>
+        </div>
+
+        <!-- Org Filter Buttons -->
+        <div class="filter-bar" id="guidelineOrgBar" style="padding-bottom: 0; margin-bottom: 0;">
+          <button class="filter-pill active" data-org="all">ทั้งหมด (All)</button>
+          <button class="filter-pill" data-org="KDIGO">KDIGO (โรคไต)</button>
+          <button class="filter-pill" data-org="ADA">ADA (เบาหวาน)</button>
+          <button class="filter-pill" data-org="ASPEN">ASPEN (โภชนบำบัด)</button>
+          <button class="filter-pill" data-org="ESPEN">ESPEN (ยุโรป)</button>
+          <button class="filter-pill" data-org="TDA">TDA (นักกำหนดอาหารไทย)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Guidelines List Container -->
+    <div id="guidelinesListContainer" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      <!-- Injected by JS -->
+    </div>
+  </main>
+
+  <!-- Modals & Footer -->
+  <div id="feedbackModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">เสนอแนะ Guideline ใหม่</h3>
+        <button class="icon-btn" onclick="closeModal('feedbackModal')">&times;</button>
+      </div>
+      <form onsubmit="handleFeedbackSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">ชื่อ Guideline / องค์กรที่ต้องการให้เพิ่ม *</label>
+          <input type="text" class="form-control" placeholder="เช่น ESPEN Micronutrient Guideline 2024" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ลิงก์เอกสาร หรือ รายละเอียด</label>
+          <textarea class="form-control" placeholder="ระบุลิงก์ DOI หรือสรุปสาระสำคัญ..."></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('feedbackModal')">ยกเลิก</button>
+          <button type="submit" class="btn btn-primary">ส่งข้อมูล</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>Dietitian101 • Clinical Practice Guidelines Center</p>
+    </div>
+  </footer>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      renderGuidelines('all', '');
+
+      // Org filter
+      const pills = document.querySelectorAll('#guidelineOrgBar .filter-pill');
+      pills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          pills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          const org = pill.getAttribute('data-org');
+          const query = document.getElementById('guidelineSearchInput').value.trim();
+          renderGuidelines(org, query);
+        });
+      });
+
+      // Search input
+      const searchInput = document.getElementById('guidelineSearchInput');
+      searchInput.addEventListener('input', (e) => {
+        const activePill = document.querySelector('#guidelineOrgBar .filter-pill.active');
+        const org = activePill ? activePill.getAttribute('data-org') : 'all';
+        renderGuidelines(org, e.target.value.trim());
+      });
+    });
+
+    function renderGuidelines(orgFilter, query) {
+      const container = document.getElementById('guidelinesListContainer');
+      if (!container || !window.DIETITIAN_DATA) return;
+
+      let list = window.DIETITIAN_DATA.guidelines;
+
+      if (orgFilter && orgFilter !== 'all') {
+        list = list.filter(g => g.organization.toUpperCase().includes(orgFilter.toUpperCase()));
+      }
+
+      if (query) {
+        const q = query.toLowerCase();
+        list = list.filter(g => 
+          g.title.toLowerCase().includes(q) || 
+          g.organization.toLowerCase().includes(q) ||
+          (g.summary && g.summary.toLowerCase().includes(q))
+        );
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="clinical-section" style="text-align: center; padding: 3rem;">
+            <p style="color: var(--text-muted); font-size: 1.05rem;">ไม่พบแนวทางเวชปฏิบัติที่ตรงกับเงื่อนไขการค้นหา</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = list.map(g => {
+        const isBookmarked = LibraryManager.isBookmarked(g.id);
+        const relatedDisease = g.disease_ref ? window.DIETITIAN_DATA.diseases.find(d => d.slug === g.disease_ref) : null;
+
+        return `
+          <div id="${g.slug}" class="clinical-section" style="margin-bottom: 0;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1rem;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+                  <span class="badge-tag" style="background-color: var(--primary);">${g.organization}</span>
+                  <span class="meta-pill">ปี ${g.year}</span>
+                  <span class="meta-pill" style="color: var(--accent-emerald); font-weight: 600;">${g.evidence_level}</span>
+                </div>
+                <h3 style="font-size: 1.3rem; font-weight: 700; color: var(--text-primary); line-height: 1.35;">${g.title}</h3>
+              </div>
+              <button 
+                class="icon-btn bookmark-btn ${isBookmarked ? 'active' : ''}" 
+                data-id="${g.id}"
+                onclick="handleGuidelineBookmark(event, '${g.id}')"
+                title="${isBookmarked ? 'บันทึกแล้ว' : 'บันทึก Guideline'}"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="${isBookmarked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                </svg>
+              </button>
+            </div>
+
+            <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.25rem;">${g.summary}</p>
+
+            <div style="background-color: var(--bg-subtle); padding: 1.25rem; border-radius: var(--radius-md); margin-bottom: 1.25rem;">
+              <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                คำแนะนำหลัก (Key Recommendations)
+              </h4>
+              <div style="font-size: 0.9rem; line-height: 1.65; color: var(--text-secondary);">
+                ${g.key_recommendations}
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle);">
+              <div>
+                ${relatedDisease ? `
+                  <a href="disease.html?slug=${relatedDisease.slug}" style="font-size: 0.85rem; color: var(--primary); font-weight: 500; display: inline-flex; align-items: center; gap: 0.3rem;">
+                    <span>อ่านคู่มือโรคที่เกี่ยวข้อง: <strong>${relatedDisease.title}</strong></span>
+                    &rarr;
+                  </a>
+                ` : ''}
+              </div>
+              <a href="${g.original_url}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" style="font-size: 0.85rem;">
+                <span>ดูเอกสารต้นฉบับ (Official Journal)</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function handleGuidelineBookmark(e, id) {
+      e.stopPropagation();
+      const g = window.DIETITIAN_DATA.guidelines.find(item => item.id === id);
+      if (g) {
+        LibraryManager.toggleBookmark({
+          id: g.id,
+          slug: g.slug,
+          title: g.title,
+          title_th: `${g.organization} (${g.year})`,
+          category: g.category,
+          type: 'guideline'
+        });
+      }
+    }
+  </script>
+</body>
+</html>

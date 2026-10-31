@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disease Clinical Reference | Dietitian101</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Reading Progress Bar -->
+  <div id="readingProgressBar"></div>
+
+  <!-- Sticky Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div style="display: flex; align-items: center; gap: 2rem;">
+        <a href="index.html" class="brand-logo">
+          <div class="brand-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <span>Dietitian101</span>
+        </a>
+
+        <nav>
+          <ul class="nav-links">
+            <li><a href="index.html" class="nav-link active">คลังความรู้รายโรค</a></li>
+            <li><a href="guidelines.html" class="nav-link">ศูนย์รวม Guideline</a></li>
+            <li><a href="library.html" class="nav-link">My Library</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="header-actions">
+        <!-- Share Link -->
+        <button class="icon-btn" id="shareArticleBtn" title="คัดลอกลิงก์แชร์">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        </button>
+
+        <!-- Dark Mode -->
+        <button class="icon-btn theme-toggle-btn" onclick="ThemeManager.toggle()" title="สลับโหมดมืด/สว่าง"></button>
+
+        <!-- Feedback -->
+        <button class="btn btn-secondary" onclick="openModal('feedbackModal')" title="เสนอแนะเนื้อหา">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>เสนอแนะ</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Reader Layout -->
+  <div class="container">
+    <div class="reader-layout" id="articleMainContainer">
+      <!-- Left Sidebar: Table of Contents (TOC) with ScrollSpy -->
+      <aside class="toc-sidebar">
+        <div class="toc-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <span>สารบัญหัวข้อ (9 Sections)</span>
+        </div>
+        <ul class="toc-list" id="tocList">
+          <!-- Injected dynamically by disease.js -->
+        </ul>
+      </aside>
+
+      <!-- Main Content Area -->
+      <main>
+        <!-- Article Header -->
+        <div class="article-header" id="articleHeaderContainer">
+          <!-- Injected dynamically by disease.js -->
+        </div>
+
+        <!-- The 9 Core Clinical Sections -->
+        <div id="articleSectionsContainer">
+          <!-- Injected dynamically by disease.js -->
+        </div>
+
+        <!-- Bottom Navigation & Feedback Action -->
+        <div style="margin-top: 3rem; padding: 2rem; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+          <div>
+            <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.25rem;">พบข้อมูลต้องการแก้ไขหรือเพิ่มเติม?</h4>
+            <p style="font-size: 0.875rem; color: var(--text-muted);">ช่วยกันสร้างคลังความรู้นักกำหนดอาหารที่ถูกต้องและทันสมัย</p>
+          </div>
+          <div style="display: flex; gap: 0.75rem;">
+            <button class="btn btn-secondary" onclick="openModal('reportModal')">แจ้งข้อผิดพลาด</button>
+            <button class="btn btn-primary" onclick="openModal('feedbackModal')">เสนอแนะข้อมูลใหม่</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Floating Action Buttons -->
+  <div class="floating-actions">
+    <!-- Back To Top Button -->
+    <button id="backToTopBtn" class="fab-btn" title="กลับขึ้นด้านบน" style="opacity: 0; pointer-events: none;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+    </button>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedbackModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">เสนอแนะเนื้อหาหรือข้อคิดเห็น</h3>
+        <button class="icon-btn" onclick="closeModal('feedbackModal')">&times;</button>
+      </div>
+      <form onsubmit="handleFeedbackSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">ชื่อ / ตำแหน่ง</label>
+          <input type="text" class="form-control" placeholder="ระบุชื่อหรือตำแหน่ง (ไม่บังคับ)">
+        </div>
+        <div class="form-group">
+          <label class="form-label">หัวข้อที่เสนอแนะ *</label>
+          <input type="text" class="form-control" placeholder="เช่น การปรับสูตรโปรตีนในระยะล้างไต" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">รายละเอียดข้อเสนอแนะ *</label>
+          <textarea class="form-control" placeholder="พิมพ์ข้อเสนอแนะ การปรับปรุงข้อมูล หรือแหล่งอ้างอิงใหม่..." required></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('feedbackModal')">ยกเลิก</button>
+          <button type="submit" class="btn btn-primary">ส่งข้อเสนอแนะ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Report Issue Modal -->
+  <div id="reportModal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">แจ้งปัญหาการใช้งาน (Report Issue)</h3>
+        <button class="icon-btn" onclick="closeModal('reportModal')">&times;</button>
+      </div>
+      <form onsubmit="handleReportSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">ประเภทปัญหา *</label>
+          <select class="form-control" required>
+            <option value="">-- เลือกประเภทปัญหา --</option>
+            <option value="content_error">เนื้อหาข้อมูลทางคลินิกคลาดเคลื่อน</option>
+            <option value="broken_link">ลิงก์เสีย / ไม่สามารถเข้าถึงได้</option>
+            <option value="ui_bug">หน้าเว็บแสดงผลผิดปกติ</option>
+            <option value="other">ปัญหาอื่นๆ</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">หน้าที่พบปัญหา</label>
+          <input type="text" class="form-control" id="reportPageUrlInput" readonly>
+        </div>
+        <div class="form-group">
+          <label class="form-label">รายละเอียดปัญหา *</label>
+          <textarea class="form-control" placeholder="อธิบายปัญหาที่พบเพื่อความรวดเร็วในการแก้ไข..." required></textarea>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('reportModal')">ยกเลิก</button>
+          <button type="submit" class="btn btn-primary">ส่งรายงาน</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--text-primary);">
+        <span>Dietitian101</span>
+        <span>•</span>
+        <span>Clinical Reference Library</span>
+      </div>
+      <p>ออกแบบและพัฒนาสำหรับนักกำหนดอาหารและบุคลากรทางการแพทย์ • ขับเคลื่อนด้วย Pages CMS & Markdown</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script src="assets/js/disease.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlInput = document.getElementById('reportPageUrlInput');
+      if (urlInput) urlInput.value = window.location.href;
+    });
+  </script>
+</body>
+</html>
